@@ -28,7 +28,7 @@ int main(int argc, char const *argv[]) {
   unsigned int i = len - 1;
   while (!feof(file)) {
     if (i == len) {
-      result = realloc(symbols, len + 1);
+      result = realloc(symbols, ++len);
 
       if (!result) {
         printf("Error: Cannot reallocate memory\n");
@@ -37,7 +37,6 @@ int main(int argc, char const *argv[]) {
       }
 
       symbols = result;
-      len++;
     }
     fscanf(file, "%c", &symbols[i]);
     i++;
