@@ -7,15 +7,12 @@
 signed char array[CELLS_LENGTH] = {0}, *ptr = array;
 
 void run_code(char *symbols, unsigned int *position);
-void loop(char *symbols, unsigned int *position);
-void *allocate(int len);
-void *reallocate(void *v, int len);
 
 int main(int argc, char const *argv[]) {
   int len = 1;
   char *symbols = NULL, *result;
 
-  symbols = allocate(len);
+  symbols = malloc(len);
 
   if (!symbols) {
     printf("Error: Cannot allocate memory");
@@ -24,7 +21,7 @@ int main(int argc, char const *argv[]) {
   }
 
   if (argc == 1) {
-    printf("Error: no file was passed as argument\n");
+    printf("Error: No file was passed as argument\n");
     free(symbols);
     return 1;
   }
@@ -33,9 +30,10 @@ int main(int argc, char const *argv[]) {
   unsigned int i = len - 1;
   while (!feof(file)) {
     if (i == len) {
-      result = reallocate(symbols, len);
+      result = realloc(symbols, len + 1);
 
       if (!result) {
+        printf("Error: Cannot reallocate memory");
         free(symbols);
         return 1;
       }
@@ -73,61 +71,20 @@ void run_code(char *symbols, unsigned int *position) {
   } else if (symbol == ',') {
     *ptr = getchar();
   } else if (symbol == '[') {
-    loop(symbols, position);
-  }
-}
+    unsigned int i, goto_end = !*ptr, loops = 0;
 
-void loop(char *symbols, unsigned int *position) {
-  unsigned int initial_position = *position, end_position, loops_count = 0, i;
-
-  while (TRUE) {
-    ++*position;
-
-    if (symbols[*position] == '[') {
-      loops_count++;
-    } else if (symbols[*position] == ']') {
-      if (loops_count > 0) {
-        loops_count--;
-      } else {
-        break;
+    do {
+      for (i = *position + 1; symbols[i] != ']' || loops != 0; i++) {
+        if (!goto_end) {
+          run_code(symbols, &i);
+        } else if (symbols[i] == '[') {
+          loops++;
+        } else if (symbols[i] == ']') {
+          loops--;
+        }
       }
-    }
+    } while (*ptr);
+
+    *position = i;
   }
-
-  end_position = *position;
-
-  if (!*ptr) {
-    *position = end_position;
-    return;
-  }
-
-  i = initial_position + 1;
-
-  while (i != end_position || *ptr) {
-    if (i == end_position) {
-      i = initial_position + 1;
-    } else {
-      run_code(symbols, &i);
-      i++;
-    }
-  }
-
-  *position = i;
-}
-
-void *allocate(int len) {
-  char *v = malloc(len);
-  return v;
-}
-
-void *reallocate(void *v, int len) {
-  void *result = realloc(v, len + 1);
-
-  if (!result) {
-    printf("Error: Cannot reallocate memory");
-    free(result);
-    return NULL;
-  }
-
-  return result;
 }
