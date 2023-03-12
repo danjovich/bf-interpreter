@@ -13,7 +13,7 @@ int main(int argc, char const *argv[]) {
   symbols = malloc(len);
 
   if (!symbols) {
-    printf("Error: Cannot allocate memory");
+    printf("Error: Cannot allocate memory\n");
     free(symbols);
     return 1;
   }
@@ -31,7 +31,7 @@ int main(int argc, char const *argv[]) {
       result = realloc(symbols, len + 1);
 
       if (!result) {
-        printf("Error: Cannot reallocate memory");
+        printf("Error: Cannot reallocate memory\n");
         free(symbols);
         return 1;
       }
