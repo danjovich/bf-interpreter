@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #define CELLS_LENGTH 5000
-#define TRUE 1
-#define FALSE 0
 
 signed char array[CELLS_LENGTH] = {0}, *ptr = array;
 
