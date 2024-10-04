@@ -1,5 +1,5 @@
 # bf-interpreter
-A brainfuck interpreter written in C.
+A brainf**k interpreter written in C.
 
 ## Running
 To run, simply clone the repository and run the following bash command in the root folder,
